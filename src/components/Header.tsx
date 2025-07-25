@@ -1,21 +1,59 @@
 import React from 'react';
-import { Breadcrumb } from 'antd';
-import {HomeOutlined} from '@ant-design/icons';
-import logo from '../assets/Group 38.png';
+import { Layout, Breadcrumb, Input, Button, type BreadcrumbProps } from 'antd';
+import { SearchOutlined, HomeOutlined, PlusOutlined } from '@ant-design/icons';
+import { useNavigate, useLocation } from 'react-router';
 
-function Header() {
-  return (
-    <div className='flex items-center gap-6 p-6 bg-gray-100'>
-    <img src={logo} alt="Logo" />
-    <header className="header">
-      <Breadcrumb>
-        <Breadcrumb.Item href="/">
-          <HomeOutlined />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
-      </Breadcrumb>
-    </header>
-    </div>
-  );
+const { Header: AntHeader } = Layout;
+
+interface BreadcrumbItem {
+  title: React.ReactNode;
 }
+
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  
+  const breadcrumbItems: BreadcrumbProps['items'] =
+    pathname === '/' ? [
+      { href: '/', title: <HomeOutlined /> },
+      { href: '#', title: 'Nakit' },
+      { title: 'Kasalar' },
+    ] :
+    pathname === '/musteriler' ? [
+      { href: '/', title: <HomeOutlined /> },
+      { href: '#', title: 'Gelirler' },
+      { title: 'Müşteriler' },
+    ] :
+    [
+      { href: '/', title: <HomeOutlined /> },
+      { title: 'Unknown Page' }
+    ];
+
+  return (
+    <AntHeader style={{ background: '#fff'}}
+     className="bg-white px-6 h-16 flex items-center justify-between">
+      <div className="flex items-center space-x-4">
+        <Breadcrumb items={breadcrumbItems} className="text-sm" />
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <Input
+          prefix={<SearchOutlined className="text-gray-400" />}
+          placeholder="Kasa Arama"
+          className="w-80"
+          size="middle"
+        />
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          className="bg-purple-600 border-purple-600 hover:bg-purple-700 hover:border-purple-700"
+          onClick={() => navigate('/musteriler')}
+        >
+          Kasa Ekle
+        </Button>
+      </div>
+    </AntHeader>
+  );
+};
+
 export default Header;
